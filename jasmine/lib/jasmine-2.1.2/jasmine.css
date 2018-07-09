@@ -16,7 +16,7 @@ body { overflow-y: scroll; }
 .jasmine_html-reporter .symbol-summary { overflow: hidden; *zoom: 1; margin: 14px 0; }
 .jasmine_html-reporter .symbol-summary li { display: inline-block; height: 8px; width: 14px; font-size: 16px; }
 .jasmine_html-reporter .symbol-summary li.passed { font-size: 14px; }
-.jasmine_html-reporter .symbol-summary li.passed:before { color: #007069; content: "\02022"; }
+.jasmine_html-reporter .symbol-summary li.passed:before { color: #537fdf; content: "\02022"; }
 .jasmine_html-reporter .symbol-summary li.failed { line-height: 9px; }
 .jasmine_html-reporter .symbol-summary li.failed:before { color: #ca3a11; content: "\d7"; font-weight: bold; margin-left: -1px; }
 .jasmine_html-reporter .symbol-summary li.disabled { font-size: 14px; }

@@ -1,9 +1,3 @@
-/* feedreader.js
- *
- * This is the spec file that Jasmine will read and contains
- * all of the tests that will be run against your application.
- */
-
 /* All of our tests within the $() function,
  * since some of these tests may require DOM elements. We want
  * to ensure they don't run until the DOM is ready.
@@ -42,18 +36,10 @@ $(() => {
         });
     });
 
-    /* Test suite that checks menu functionality */
     describe('The menu', () => {
-        /* Test that ensures the menu element is
-         * hidden by default.
-         */
         it('hides the menu by default', () => {
             expect($('body').hasClass('menu-hidden')).toBe(true);
         });
-
-        /* Test that ensures the menu changes
-         * visibility when the menu icon is clicked.
-         */
         it('visibility is toggled upon click on menu icon', () => {
 
             $('.menu-icon-link').click();
@@ -64,8 +50,6 @@ $(() => {
         });
     });
 });
-
-/* Test suite that checks the loadFeed functionality*/
 describe('Initial Entries', () => {
 
     /* Test that ensures when the loadFeed

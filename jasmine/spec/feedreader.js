@@ -1,99 +1,116 @@
-/* All of our tests within the $() function,
- * since some of these tests may require DOM elements. We want
- * to ensure they don't run until the DOM is ready.
- */
-$(() => {
+// This is the spec file that Jasmine will read and contains
+// all of the tests that will be run against your application.
+//
+// We're placing all of our tests within the $() function,
+// since some of these tests may require DOM elements. We want
+// to ensure they don't run until the DOM is ready.
 
-    describe('RSS Feeds', () => {
-        /* Tests to make sure that the allFeeds variable has
-         * been defined and that it is not empty.
-         */
-        it('are defined', () => {
-            expect(allFeeds).toBeDefined();
-            expect(allFeeds.length).not.toBe(0);
-        });
+$(function() {
 
-        /* Test that loops through each feed
-         * in the allFeeds object and ensures it has a URL defined
-         * and that the URL is not empty.
-         */
-        it('have a valid url', () => {
-            allFeeds.forEach((feed) => {
-                expect(feed.url).toBeDefined();
-                expect(feed.url.length).toBeGreaterThan(0);
-            });
+    // Testing suite of RSS Feeds
+    describe("RSS Feeds", function() {
+  
+      // Make sure all feeds are defined, not empty
+      it("are defined", function() {
+        expect(allFeeds).toBeDefined();
+        expect(allFeeds instanceof Array).toBeTruthy();
+        expect(allFeeds.length).not.toBe(0);
+      });
+  
+      // Make sure all feeds have URL that starts with "http(s)://"
+      it("have URLs", function() {
+        allFeeds.forEach(function(feed) {
+          expect(feed.url).toBeDefined();
+          expect(feed.url.length).not.toBe(0);
+          expect(feed.url).toMatch(/^(http|https):\/\//);
         });
-
-        /* Test that loops through each feed
-         * in the allFeeds object and ensures it has a name defined
-         * and that the name is not empty.
-         */
-        it('have a valid name', () => {
-            allFeeds.forEach((feed) => {
-                expect(feed.name).toBeDefined();
-                expect(feed.name.length).toBeGreaterThan(0);
-            });
+      });
+  
+      // Make sure all feeds have names (String), not empty
+      it("have names", function() {
+        allFeeds.forEach(function(feed) {
+          expect(feed.name).toBeDefined();
+          expect(typeof feed.name).toBe("string");
+          expect(feed.name.length).not.toBe(0);
         });
+      });
     });
-
-    describe('The menu', () => {
-        it('hides the menu by default', () => {
-            expect($('body').hasClass('menu-hidden')).toBe(true);
-        });
-        it('visibility is toggled upon click on menu icon', () => {
-
-            $('.menu-icon-link').click();
-            expect($('body').hasClass('menu-hidden')).toBe(false);
-
-            $('.menu-icon-link').click();
-            expect($('body').hasClass('menu-hidden')).toBe(true);
-        });
+  
+    // Testing suite of Menu
+    describe("The menu", function() {
+  
+      // Pre-define elements needed for testing hiding/showing of the menu
+      var body = document.body;
+      var menuIcon = document.querySelector(".menu-icon-link");
+  
+      // Make sure the menu is hidden initially
+      it("body has 'menu-hidden' initially", function() {
+        expect(body.className).toContain("menu-hidden");
+      });
+  
+      // Make sure menu icon toggles hide/show on clicking
+      it("body toggles the class 'menu-hidden' on clicking menu icon", function() {
+        menuIcon.click();
+        expect(body.className).not.toContain("menu-hidden");
+  
+        menuIcon.click();
+        expect(body.className).toContain("menu-hidden");
+      });
     });
-});
-describe('Initial Entries', () => {
-
-    /* Test that ensures when the loadFeed
-     * function is called and completes its work, there is at least
-     * a single .entry element within the .feed container.
-     */
-    let feedLength;
-    beforeEach((done) => {
-        loadFeed(0, () => {
-            feedLength = $('.feed .entry').length;
-            done();
+  
+    // Testing suite of Initial Entries
+    describe("Initial Entries", function() {
+  
+      // Avoid duplicated setup
+      // Before loading feed
+      beforeEach(function(done) {
+        loadFeed(0, function() {
+          done();
         });
-
-    });
-
-    it('has at least one entry', (done) => {
-        expect(feedLength).toBeGreaterThan(0);
+      });
+  
+      // Load "loadFeed" function is called and completes it, and there
+      // should at least 1 .entry element in the .feed contianer
+      it("has at least 1 entry after loadFeed function is called", function(done) {
+        var numEntries = document.querySelector(".feed").getElementsByClassName("entry").length;
+        expect(numEntries).toBeGreaterThan(0);
         done();
-    });
-});
-
-/* Test suite that checks the feed functionality*/
-describe('New Feed Selection', () => {
-
-    /* Test that ensures when a new feed is loaded
-     * by the loadFeed function that the content actually changes.
-     */
-    let feedA,
-        feedB;
-
-    beforeEach((done) => {
-        loadFeed(0, () => {
-            feedA = document.querySelector('.feed').innerHTML;
-        });
-
-        loadFeed(1, () => {
-            feedB = document.querySelector('.feed').innerHTML;
-            done();
-        });
-    });
-
-    /* Check if feeds have been added to the feedList*/
-    it('loads new feeds', (done) => {
-        expect(feedB !== feedA).toBe(true);
+      });
+  
+      // Make sure each (.feed .entry-link) element has valid link
+      it("has a entry that has a link starting with 'http(s)://'", function(done) {
+        var entries = document.querySelector(".feed").getElementsByClassName("entry-link");
+        for(var i = 0; i < entries.length; i++){
+          expect(entries[i].href).toMatch(/^(http|https):\/\//);
+        }
         done();
+      });
     });
-});
+  
+    // Testing suite of New Feed Selection
+    describe("New Feed Selection", function() {
+  
+      // Avoid duplicated setup
+      // Initial loaded feed setup
+      var initFeedSelection;
+      beforeEach(function(done) {
+        loadFeed(0, function() {
+          initFeedSelection = document.querySelector(".feed").innerHTML;
+  
+          loadFeed(1, function() {
+            done();
+          });
+        });
+      });
+  
+      // Make sure when new feed is loaded using loadFeed function,
+      // the content changes
+      it("changes its loaded content", function(done) {
+        var newFeedSelection = document.querySelector(".feed").innerHTML;
+        expect(initFeedSelection).not.toBe(newFeedSelection);
+        done();
+      });
+    });
+  
+  }());
+  
